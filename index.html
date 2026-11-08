@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English Master AI - Học Giao Tiếp Tiếng Anh</title>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --secondary: #06b6d4;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Modern Glassmorphic Header */
+    header {
+      background: rgba(30, 41, 59, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--secondary);
+    }
+
+    nav { display: flex; gap: 8px; }
+
+    .nav-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: 0.2s;
+    }
+
+    .nav-btn.active, .nav-btn:hover {
+      background: rgba(79, 70, 229, 0.2);
+      color: var(--text);
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    main {
+      flex: 1;
+      padding: 24px;
+      max-width: 1000px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* --- AUTH VIEW --- */
+    .auth-container {
+      max-width: 400px;
+      margin: 40px auto;
+      background: var(--card-bg);
+      padding: 32px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+
+    .auth-tabs { display: flex; margin-bottom: 24px; border-bottom: 1px solid var(--border); }
+    .auth-tab { flex: 1; padding: 10px; background: none; border: none; color: var(--text-muted); cursor: pointer; font-weight: 600; }
+    .auth-tab.active { color: var(--secondary); border-bottom: 2px solid var(--secondary); }
+
+    .input-group { margin-bottom: 16px; text-align: left; }
+    .input-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+    .input-group input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: #0f172a; color: #fff; }
+
+    /* --- HOME VIEW (DASHBOARD) --- */
+    .hero {
+      background: linear-gradient(135deg, rgba(79,70,229,0.3) 0%, rgba(6,182,212,0.1) 100%);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .hero h2 { font-size: 32px; margin: 0 0 10px; color: #fff; }
+    .hero p { color: var(--text-muted); margin-bottom: 24px; font-size: 16px; }
+
+    .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--secondary);
+      box-shadow: 0 10px 25px rgba(6,182,212,0.15);
+    }
+
+    .feature-icon { font-size: 36px; margin-bottom: 12px; }
+    .feature-card h3 { margin: 0 0 8px; }
+    .feature-card p { color: var(--text-muted); font-size: 14px; margin: 0; }
+
+    /* --- GRAMMAR CHECKER VIEW --- */
+    .grammar-box {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid var(--border);
+    }
+
+    .mic-btn-large {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: none;
+      color: white;
+      font-size: 32px;
+      cursor: pointer;
+      margin: 20px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.3s;
+    }
+
+    .mic-btn-large.recording {
+      background: #ef4444;
+      box-shadow: 0 0 20px #ef4444;
+      animation: pulse 1.5s infinite;
+    }
+
+    .feedback-panel {
+      margin-top: 20px;
+      padding: 16px;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 12px;
+      border-left: 4px solid var(--secondary);
+    }
+
+    /* --- AI CHAT VIEW (15-MIN SESSION) --- */
+    .chat-container {
+      background: var(--card-bg);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      height: 500px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-header {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .timer-badge {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--warning);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .message {
+      max-width: 80%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    .message.ai { background: #334155; align-self: flex-start; }
+    .message.user { background: var(--primary); align-self: flex-end; }
+
+    .chat-controls {
+      padding: 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .btn:hover { background: var(--primary-hover); }
+    .btn-secondary { background: var(--secondary); color: #000; }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">🚀 English AI Master</div>
+    <nav id="mainNav" style="display: none;">
+      <button class="nav-btn active" onclick="switchView('homeView')">Trang chủ</button>
+      <button class="nav-btn" onclick="switchView('grammarView')">Sửa ngữ pháp AI</button>
+      <button class="nav-btn" onclick="switchView('chatView')">Luyện 15p AI</button>
+    </nav>
+    <div class="user-profile" id="userProfile" style="display: none;">
+      <div class="avatar" id="avatarIcon">N</div>
+      <span id="userNameDisplay">Học viên</span>
+      <button class="nav-btn" onclick="logout()" style="padding: 4px 8px; font-size: 12px;">Thoát</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- 1. TRANG ĐĂNG NHẬP / ĐĂNG KÝ -->
+    <section id="authView" class="view active">
+      <div class="auth-container">
+        <div class="auth-tabs">
+          <button class="auth-tab active" onclick="toggleAuthMode('login')">Đăng nhập</button>
+          <button class="auth-tab" onclick="toggleAuthMode('signup')">Đăng ký</button>
+        </div>
+        <h2 id="authTitle">Đăng nhập tài khoản</h2>
+        <form onsubmit="handleAuth(event)">
+          <div class="input-group">
+            <label>Tên người dùng / Email</label>
+            <input type="text" id="authEmail" required placeholder="Nhập tên của bạn...">
+          </div>
+          <div class="input-group">
+            <label>Mật khẩu</label>
+            <input type="password" id="authPass" required placeholder="••••••••">
+          </div>
+          <button type="submit" class="btn" style="width: 100%; margin-top: 10px;" id="authSubmitBtn">Vào ứng dụng</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- 2. TRANG CHỦ (DASHBOARD) -->
+    <section id="homeView" class="view">
+      <div class="hero">
+        <h2>Chào mừng trở lại, <span id="heroUsername">Bạn</span>! 👋</h2>
+        <p>Chọn phương thức luyện tập ngay hôm nay để làm chủ tiếng Anh giao tiếp.</p>
+        <button class="btn btn-secondary" onclick="start15MinSession()">⏱️ Bắt đầu phiên luyện 15 phút</button>
+      </div>
+
+      <div class="grid-cards">
+        <div class="feature-card" onclick="switchView('grammarView')">
+          <div class="feature-icon">🎙️</div>
+          <h3>AI Sửa Ngữ Pháp Nói</h3>
+          <p>Nói vào micro, AI sẽ phân tích lỗi sai ngữ pháp, từ vựng và gợi ý cách sửa chuẩn native.</p>
+        </div>
+        <div class="feature-card" onclick="switchView('chatView')">
+          <div class="feature-icon">🤖</div>
+          <h3>Hội Thoại AI Theo Chủ Đề</h3>
+          <p>Luyện phản xạ giao tiếp với trợ lý AI theo các tình huống: Du lịch, Phỏng vấn, Đặt phòng...</p>
+        </div>
+        <div class="feature-card" onclick="alert('Tính năng Flashcard đã tích hợp sẵn trong kho bài tập!')">
+          <div class="feature-icon">📚</div>
+          <h3>Kho Bài Học & Từ Vựng</h3>
+          <p>Hàng trăm mẫu câu giao tiếp thông dụng phân loại theo từng cấp độ học.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. TRANG AI SỬA NGỮ PHÁP KHI NÓI -->
+    <section id="grammarView" class="view">
+      <h2>🎙️ AI Sửa Ngữ Pháp Qua Giọng Nói</h2>
+      <p style="color: var(--text-muted);">Hãy nhấn vào micro và nói một câu tiếng Anh. AI sẽ kiểm tra câu của bạn.</p>
+
+      <div class="grammar-box">
+        <button class="mic-btn-large" id="grammarMicBtn" onclick="toggleGrammarRecord()">🎤</button>
+        <p style="text-align: center; font-weight: 600;" id="micStatusText">Nhấn vào micro để bắt đầu nói</p>
+
+        <div class="feedback-panel" id="grammarResult" style="display: none;">
+          <p><strong>🗣️ Câu bạn vừa nói:</strong> <span id="userSpokenText" style="color: var(--secondary);">-</span></p>
+          <p><strong>❌ Lỗi ngữ pháp phát hiện:</strong> <span id="grammarErrors" style="color: #f87171;">-</span></p>
+          <p><strong>✅ Gợi ý sửa chuẩn:</strong> <span id="grammarCorrection" style="color: var(--success); font-weight: 600;">-</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. TRANG GIAO TIẾP AI (15 PHÚT) -->
+    <section id="chatView" class="view">
+      <div class="chat-container">
+        <div class="chat-header">
+          <div>
+            <strong>🤖 AI Tutor: </strong>
+            <select id="chatTopicSelect" onchange="resetChat()" style="background: #0f172a; color: #fff; border: 1px solid var(--border); padding: 4px 8px; border-radius: 6px;">
+              <option value="daily">Giao tiếp hàng ngày</option>
+              <option value="hotel">Đặt phòng khách sạn</option>
+              <option value="interview">Phỏng vấn xin việc</option>
+            </select>
+          </div>
+          <div class="timer-badge" id="sessionTimer">⏱️ 15:00</div>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+          <div class="message ai">Hello! I am your AI English Assistant. Let's practice speaking today! What did you do this morning?</div>
+        </div>
+
+        <div class="chat-controls">
+          <button class="btn btn-secondary" onclick="speakLastAiResponse()">🔊 Nghe AI đọc</button>
+          <button class="btn" onclick="recordChatInput()">🎤 Nói với AI</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // System State
+    let currentUser = null;
+    let authMode = 'login';
+    let isRecordingGrammar = false;
+    let timerInterval = null;
+    let timeLeft = 900; // 15 phút = 900 giây
+
+    // --- NAVIGATION & AUTH ---
+    function toggleAuthMode(mode) {
+      authMode = mode;
+      document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('authTitle').innerText = mode === 'login' ? 'Đăng nhập tài khoản' : 'Tạo tài khoản mới';
+      document.getElementById('authSubmitBtn').innerText = mode === 'login' ? 'Vào ứng dụng' : 'Đăng ký ngay';
+    }
+
+    function handleAuth(e) {
+      e.preventDefault();
+      const name = document.getElementById('authEmail').value;
+      currentUser = name;
+      
+      // Update UI for logged-in user
+      document.getElementById('userNameDisplay').innerText = name;
+      document.getElementById('heroUsername').innerText = name;
+      document.getElementById('avatarIcon').innerText = name.charAt(0).toUpperCase();
+      
+      document.getElementById('mainNav').style.display = 'flex';
+      document.getElementById('userProfile').style.display = 'flex';
+      
+      switchView('homeView');
+    }
+
+    function logout() {
+      currentUser = null;
+      document.getElementById('mainNav').style.display = 'none';
+      document.getElementById('userProfile').style.display = 'none';
+      switchView('authView');
+    }
+
+    function switchView(viewId) {
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      
+      document.getElementById(viewId).classList.add('active');
+      
+      // Highlight current tab
+      if(viewId === 'homeView') document.querySelectorAll('.nav-btn')[0]?.classList.add('active');
+      if(viewId === 'grammarView') document.querySelectorAll('.nav-btn')[1]?.classList.add('active');
+      if(viewId === 'chatView') document.querySelectorAll('.nav-btn')[2]?.classList.add('active');
+    }
+
+    // --- FEATURE 2: AI SỬA NGỮ PHÁP KHI NÓI ---
+    function toggleGrammarRecord() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        alert("Trình duyệt không hỗ trợ nhận diện giọng nói. Hãy chọn Google Chrome!");
+        return;
+      }
+
+      const micBtn = document.getElementById('grammarMicBtn');
+      const statusText = document.getElementById('micStatusText');
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+
+      if (!isRecordingGrammar) {
+        recognition.start();
+        isRecordingGrammar = true;
+        micBtn.classList.add('recording');
+        statusText.innerText = "Đang lắng nghe câu của bạn...";
+      }
+
+      recognition.onresult = function(e) {
+        const text = e.results[0][0].transcript;
+        isRecordingGrammar = false;
+        micBtn.classList.remove('recording');
+        statusText.innerText = "Nhấn vào micro để tiếp tục nói";
+        
+        analyzeGrammarWithAI(text);
+      };
+
+      recognition.onerror = function() {
+        isRecordingGrammar = false;
+        micBtn.classList.remove('recording');
+        statusText.innerText = "Thử lại, nhấn micro để nói!";
+      };
+    }
+
+    // Giả lập logic phân tích lỗi ngữ pháp của AI
+    function analyzeGrammarWithAI(userText) {
+      document.getElementById('grammarResult').style.display = 'block';
+      document.getElementById('userSpokenText').innerText = userText;
+
+      const lower = userText.toLowerCase();
+      let error = "Không phát hiện lỗi lớn. Câu giao tiếp tự nhiên!";
+      let correction = userText;
+
+      // Mô phỏng luật sửa ngữ pháp nhanh
+      if (lower.includes("he go") || lower.includes("she go")) {
+        error = "Chia động từ thì Hiện tại đơn chưa đúng ('go' -> 'goes').";
+        correction = userText.replace(/go/i, "goes");
+      } else if (lower.includes("yesterday i go")) {
+        error = "Dùng sai thì quá khứ ('go' -> 'went').";
+        correction = userText.replace(/go/i, "went");
+      } else if (lower.includes("i am agree")) {
+        error = "Dùng thừa động từ to-be ('I am agree' -> 'I agree').";
+        correction = userText.replace(/am agree/i, "agree");
+      }
+
+      document.getElementById('grammarErrors').innerText = error;
+      document.getElementById('grammarCorrection').innerText = correction;
+    }
+
+    // --- FEATURE 3: CHAT AI 15 PHÚT ---
+    function start15MinSession() {
+      switchView('chatView');
+      resetChat();
+      startTimer();
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      timeLeft = 900;
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        const mins = Math.floor(timeLeft / 60);
+        const secs = timeLeft % 60;
+        document.getElementById('sessionTimer').innerText = `⏱️ ${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          alert("🎉 Hết giờ 15 phút luyện tập hôm nay! Hoàn thành xuất sắc!");
+        }
+      }, 1000);
+    }
+
+    function recordChatInput() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) return alert("Hỗ trợ trên Google Chrome!");
+
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.start();
+
+      recognition.onresult = function(e) {
+        const userMsg = e.results[0][0].transcript;
+        appendMessage(userMsg, 'user');
+        generateAiReply(userMsg);
+      };
+    }
+
+    function appendMessage(text, sender) {
+      const container = document.getElementById('chatMessages');
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `message ${sender}`;
+      msgDiv.innerText = text;
+      container.appendChild(msgDiv);
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function generateAiReply(userText) {
+      // Phản hồi thông minh mẫu của AI
+      setTimeout(() => {
+        let aiText = "That sounds interesting! Could you tell me more about it?";
+        const lower = userText.toLowerCase();
+
+        if (lower.includes("hello") || lower.includes("hi")) {
+          aiText = "Hello! Nice to talk to you. What is your plan for today?";
+        } else if (lower.includes("hotel") || lower.includes("room")) {
+          aiText = "Sure! What type of room would you like to book for your trip?";
+        } else if (lower.includes("work") || lower.includes("job")) {
+          aiText = "Great! What is your main responsibility at your workplace?";
+        }
+
+        appendMessage(aiText, 'ai');
+      }, 800);
+    }
+
+    function speakLastAiResponse() {
+      const messages = document.querySelectorAll('.message.ai');
+      if (messages.length > 0) {
+        const lastMsg = messages[messages.length - 1].innerText;
+        const utterance = new SpeechSynthesisUtterance(lastMsg);
+        utterance.lang = "en-US";
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    function resetChat() {
+      document.getElementById('chatMessages').innerHTML = 
+        '<div class="message ai">Hello! I am your AI English Assistant. Let\'s practice speaking! Choose a topic above and say something!</div>';
+    }
+  </script>
+</body>
+</html>
